@@ -1,5 +1,5 @@
-"use client"
-import {useRouter} from "next/navigation";
+"use client";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -14,9 +14,10 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import { Avatar } from "@mui/material";
-import HomeIcon from '@mui/icons-material/Home';
-import StoreIcon from '@mui/icons-material/Store';
+import HomeIcon from "@mui/icons-material/Home";
+import StoreIcon from "@mui/icons-material/Store";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Providers from "@/store/provider";
 
 const drawerWidth = 200;
 
@@ -24,7 +25,7 @@ const Navbar = (props) => {
   const { window } = props;
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -39,11 +40,10 @@ const Navbar = (props) => {
         spacing={0}
         justifyContent="center"
         alignItems={"center"}
-      >
-      </Box>
+      ></Box>
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={()=>router.push("/")} >
+          <ListItemButton onClick={() => router.push("/")}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
@@ -51,14 +51,21 @@ const Navbar = (props) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={()=>router.push("/products")} >
+          <ListItemButton onClick={() => router.push("/products")}>
             <ListItemIcon>
               <StoreIcon />
             </ListItemIcon>
             <ListItemText primary={"Tienda"} sx={{ color: "black" }} />
           </ListItemButton>
         </ListItem>
-        
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => router.push("/cart")}>
+            <ListItemIcon>
+              <ShoppingCartIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Carrito"} sx={{ color: "black" }} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </div>
   );
@@ -67,86 +74,96 @@ const Navbar = (props) => {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      {/* <CssBaseline /> */}
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar
-          sx={{ gap: "20px", display: "flex", justifyContent: "space-between" }}
+    <Providers>
+      <Box sx={{ display: "flex" }}>
+        {/* <CssBaseline /> */}
+        <AppBar
+          position="fixed"
+          sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+          }}
         >
-          <Box>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrQvKUToj7R0VkMVym1LkJerzY3goYjM1rHQ&usqp=CAU" alt="logo" style={{ width: "70px" }} />
-          </Box>
-          <IconButton
-            color="secondary.primary"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+          <Toolbar
+            sx={{
+              gap: "20px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
           >
-            <MenuIcon color="secondary.primary" />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          anchor={"right"}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
+            <Box>
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrQvKUToj7R0VkMVym1LkJerzY3goYjM1rHQ&usqp=CAU"
+                alt="logo"
+                style={{ width: "70px" }}
+              />
+            </Box>
+            <IconButton
+              color="secondary.primary"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon color="secondary.primary" />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            anchor={"right"}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true,
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                backgroundColor: "#1976d2",
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                backgroundColor: "#1976d2",
+              },
+            }}
+            open={true}
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
           sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              backgroundColor: "#1976d2",
-            },
+            flexGrow: 1,
+            // py: 4,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            minHeight: "100vh",
+            // marginBottom: "50px"
+            backgroundColor: "lightblue",
           }}
         >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              backgroundColor: "#1976d2",
-            },
-          }}
-          open={true}
-        >
-          {drawer}
-        </Drawer>
+          <Toolbar />
+          {props.chil}
+        </Box>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          // py: 4,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          minHeight: "100vh",
-          // marginBottom: "50px"
-          backgroundColor:"lightblue"
-        }}
-      >
-        <Toolbar />
-        {props.chil}
-      </Box>
-    </Box>
+    </Providers>
   );
 };
 
